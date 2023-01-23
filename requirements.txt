@@ -1,11 +1,11 @@
 requests
 bs4
 lxml
-Flask==1.1.4
+Flask
 click
 gunicorn
 importlib-metadata
-itsdangerous==2.0.1
-MarkupSafe==2.0.1
+itsdangerous
+MarkupSafe
 Werkzeug
 zipp
