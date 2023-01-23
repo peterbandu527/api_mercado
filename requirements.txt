@@ -6,6 +6,6 @@ click
 gunicorn
 importlib-metadata
 itsdangerous
-MarkupSafe
+MarkupSafe==2.0.1
 Werkzeug
 zipp
