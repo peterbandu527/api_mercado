@@ -1,10 +1,35 @@
-from flask import Flask,jsonify,request
+from flask import Flask,jsonify,request,render_template,Response
 import json
 from functions import TodosProducto,limiteProducto
+import requests
+
 app = Flask(__name__)
-@app.route('/')
+@app.route('/',methods=["GET","POST"])
 def Home():
-    return 'hola'
+    if request.method=="POST":
+        print("hola")
+        producto = request.form["producto"]
+        limite = request.form["limite"]
+        r = requests.get('https://api-mercadolibre.onrender.com/mercado_libre',json={"producto":producto,"limite":int(limite)})
+        print(r.status_code)
+        if r.status_code==200:        
+            data = json.loads(r.text)
+            
+            t = ""
+            for i,j,z in zip(data["datos"]["titulos"],data["datos"]["precios"],data["datos"]["urls"]):
+                print(i,j,z)
+                t += f"{i}|{j}|{z}\n"
+            return Response(
+                t,
+                mimetype="csv",
+                headers={
+                    "content-disposition":"attachment; filename=datos_mercado_libre.csv"
+                }
+            )
+            
+        return"Error"
+        pass
+    return render_template('index.html')
 
 @app.route('/mercado_libre', methods=["GET"])
 def mercadoLibre():
@@ -18,4 +43,4 @@ def mercadoLibre():
 
 
 if __name__ =="__main__":
-    app.run("0.0.0.0",debug=True)
+    app.run(port=5001,debug=True)
